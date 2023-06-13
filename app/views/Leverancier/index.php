@@ -11,17 +11,19 @@ echo $data["title"];
 </head>
 
 <body>
-    <h4> Naam: <?= $data['productnaam']; ?></h4>
-    <h4> Barcode: <?= $data['barcode']; ?></h4>
     <table border=1>
   <thead>
     <th>Naam</th>
-    <th>Omschrijving</th>
+    <th>Contactpersoon</th>
+    <th>LeverancierNummer</th>
+    <th>Mobiel</th>
+    <th>Aantal verschillende producten</th>
+    <th>Toon producten</th>
   </thead>
     <tbody>
     <?=$data['rows']?>
   </tbody>
 </table>
-<a href="<?=URLROOT;?>/overzichtmagazijn/index">terug</a>
+<a href="<?=URLROOT;?>/homepages/index">Home</a>
 </body>
 </html>

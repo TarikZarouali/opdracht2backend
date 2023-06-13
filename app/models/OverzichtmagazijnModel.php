@@ -9,7 +9,7 @@ class OverzichtmagazijnModel {
     }
 
      public function getOverzichtmagazijns() {
-      $sql = "SELECT  Product.Id as ProductId
+  $sql = "SELECT  Product.Id as ProductId
                      ,Product.Barcode
                      ,Product.Naam
                      ,Magazijn.Verpakkingseenheid
@@ -24,22 +24,72 @@ class OverzichtmagazijnModel {
     }
 
     public function getLeverantieinfos($ProductId) {
-        $sql = "SELECT  Product.Id
-                     ,Product.Naam
-                     ,ProductPerLeverancier.DatumLevering
-                     ,ProductPerLeverancier.Aantal
-                     ,ProductPerLeverancier.DatumEerstVolgendeLevering
+        $sql = "SELECT             
+                        Product.Id
+                        ,Product.Naam as ProductNaam
+                        ,ProductPerLeverancier.DatumLevering
+                        ,ProductPerLeverancier.Aantal
+                        ,ProductPerLeverancier.DatumEerstVolgendeLevering
+                        ,Leverancier.Naam as LeverancierNaam
+                        ,Leverancier.Contactpersoon
+                        ,Leverancier.LeverancierNummer
+                        ,Leverancier.Mobiel
+                        ,MAGA.AantalAanwezig
+
               FROM Product
+
               inner join ProductPerLeverancier
               ON Product.Id = ProductPerLeverancier.ProductId
-			  WHERE   Product.Id = :id
+              
+              INNER JOIN Leverancier
+			        ON Leverancier.Id = ProductPerLeverancier.LeverancierId	
+              
+              INNER JOIN Magazijn AS MAGA
+              ON        MAGA.ProductId = Product.Id
+              
+              WHERE   Product.Id = :id
               ORDER BY DatumEerstVolgendeLevering ASC";
       $this->db->query($sql);
-       $this->db->bind(':id', $ProductId, PDO::PARAM_INT);
+      $this->db->bind(':id', $ProductId, PDO::PARAM_INT);
       $result = $this->db->resultSet();
       return $result;
     }
+
+    public function getallergeneinfos($productId) {
+      $sql = "SELECT                
+                      Allergeen.Naam
+                     ,Allergeen.Omschrijving
+                     ,Product.Naam as naamproduct
+                     ,Product.Barcode
+                     
+              FROM Allergeen
+
+              INNER JOIN ProductPerAllergeen
+              ON Allergeen.Id = ProductPerAllergeen.AllergeenId
+              
+              INNER JOIN Product
+              ON ProductPerAllergeen.ProductId = Product.Id
+              
+              WHERE   Product.Id = :id
+              ORDER BY Allergeen.Naam ASC";
+      $this->db->query($sql);
+      $this->db->bind(':id', $productId, PDO::PARAM_INT);
+      $result = $this->db->resultSet();
+      return $result;
+    }
+
+    public function getProductById($productId)
+    {
+      $sql = "SELECT  Product.Id              
+                     ,Product.Naam as naamproduct
+                     ,Product.Barcode
+                     
+              FROM Product
+              WHERE   Product.Id = :id";
+      $this->db->query($sql);
+      $this->db->bind(':id', $productId, PDO::PARAM_INT);
+      $result = $this->db->single();
+      return $result;
+    }
 }
-
-
 ?>

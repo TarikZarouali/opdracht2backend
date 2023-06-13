@@ -11,6 +11,11 @@ echo $data["title"];
 </head>
 
 <body>
+    <h4> Leverancier: <?= $data['leveranciervoornaam']; ?></h4>
+    <h4> Contact persoon leverancier: <?= $data['contactpersoon']; ?></h4>
+    <h4> Leverancier nummer: <?= $data['leveranciervoornaam']; ?></h4>
+    <h4> Mobiel: <?= $data['telefoonnummer']; ?></h4>
+    <h5><?php echo $data['message']; ?></h5>
     <table border=1>
   <thead>
     <th>Naam Product</th>

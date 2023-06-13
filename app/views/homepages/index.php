@@ -3,4 +3,5 @@
 <a href="<?=URLROOT;?>/uitslaggegevens/index">Overzicht Speler</a> |
 <a href="<?=URLROOT;?>/datumgegevens/index">Overzicht Uitslag</a> |
 <a href="<?=URLROOT;?>/overzichtmagazijn/index">Overzicht Magazijn Jamin</a> |
+<a href="<?=URLROOT;?>/Leverancier/index">Overzicht Leverancier</a> |
 <?php require APPROOT . '/views/includes/footer.php'; ?>
