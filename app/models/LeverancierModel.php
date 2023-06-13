@@ -152,4 +152,40 @@ class LeverancierModel
         }
     }
 
+
+    public function updateAantalAanwezig($id, $nieuwAantal)
+{
+    try {
+        $sql = "UPDATE Magazijn
+                SET AantalAanwezig = AantalAanwezig + :nieuwAantal
+                WHERE ProductId IN (
+                SELECT ProductId
+                FROM ProductPerLeverancier
+                WHERE LeverancierId = :leverancierId)";
+        $this->db->query($sql);
+        $this->db->bind(':nieuwAantal', $nieuwAantal, PDO::PARAM_INT);
+        $this->db->bind(':leverancierId', $id, PDO::PARAM_INT);
+        $this->db->execute();
+    } catch (PDOException $error) {
+        echo $error->getMessage();
+        throw $error;
+    }
+}
+
+public function updateDatumLaatsteLevering($id)
+{
+    try {
+        $sql = "UPDATE ProductPerLeverancier
+                SET DatumLevering = CURRENT_DATE()
+                WHERE LeverancierId = :id";
+        $this->db->query($sql);
+        $this->db->bind(':id', $id, PDO::PARAM_INT);
+        $this->db->execute();
+    } catch (PDOException $error) {
+        echo $error->getMessage();
+        throw $error;
+    }
+}
+
+
 }

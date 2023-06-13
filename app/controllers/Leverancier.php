@@ -87,17 +87,40 @@ class Leverancier extends Controller
         $this->view('Leverancier/toonproduct', $data);
     }
 
-    public function updateproduct($id)
-    {
-        $leveringProduct = $this->LeverancierModel->leveringProduct($id); // Pass the appropriate $id parameter
+  public function updateproduct($id)
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $aantalEenheden = $_POST['aantal_eenheden'];
+        $this->LeverancierModel->updateAantalAanwezig($id, $aantalEenheden);
+        $this->LeverancierModel->updateDatumLaatsteLevering($id);
+
+        // Fetch the updated leverancier details
+        $leverancier = $this->LeverancierModel->leveringProduct($id);
 
         $data = [
             'title' => "<h2>Levering product</h2>",
-            'Naam' => $leveringProduct->Naam, // Use 'Naam' instead of 'leveranciernaam'
-            'ContactPersoon' => $leveringProduct->Contactpersoon, // Use 'Contactpersoon' instead of 'ContactPersoon'
-            'Mobiel' => $leveringProduct->Mobiel,
+            'Naam' => $leverancier->Naam,
+            'ContactPersoon' => $leverancier->Contactpersoon,
+            'Mobiel' => $leverancier->Mobiel,
+            'id' => $id,
+        ];
+        $this->view('Leverancier/updateproduct', $data);
+    } else {
+        // Display the update form
+        $leverancier = $this->LeverancierModel->leveringProduct($id);
+        $data = [
+            'title' => "<h2>Levering product</h2>",
+            'Naam' => $leverancier->Naam,
+            'ContactPersoon' => $leverancier->Contactpersoon,
+            'Mobiel' => $leverancier->Mobiel,
+            'id' => $id,
         ];
         $this->view('Leverancier/updateproduct', $data);
     }
+}
+
+
+
+
 
 }
