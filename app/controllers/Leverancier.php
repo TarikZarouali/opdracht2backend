@@ -18,7 +18,8 @@ class Leverancier extends Controller
 
         $rows = '';
 
-        foreach ($Leveranciers as $items) {
+        foreach ($Leveranciers as $items) 
+        {
             $rows .= "<tr>
                         <td>$items->Naam</td>
                         <td>$items->Contactpersoon</td>
@@ -31,34 +32,37 @@ class Leverancier extends Controller
                       </tr>";
         }
 
-        $data = [
-            'title' => "<h2>Overzicht Leveranciers</h2>",
-            'rows' => $rows,
-        ];
+        $data = ['title' => "<h2>Overzicht Leveranciers</h2>",'rows' => $rows];
         $this->view('Leverancier/index', $data);
     }
 
     public function toonproduct($id)
     {
-
         $product = $this->LeverancierModel->getLeverancierById($id);
 
         $toonproducts = $this->LeverancierModel->getToonproducts($id);
 
         $rows = '';
-        if (empty($toonproducts)) {
+        if (empty($toonproducts)) 
+        {
             $message = "Dit bedrijf heeft tot nu toe geen producten geleverd aan Jamin";
 
             $rows .= "<tr>
                             <td colspan='5'>$message</td>
                         </tr>";
             header("Refresh:3; url=http://magazijnjamin.nl/Leverancier/index");
-        } else {
-            foreach ($toonproducts as $items) {
+        } 
+        else 
+        {
+            foreach ($toonproducts as $items) 
+            {
 
-                if (empty($items->AantalAanwezig)) {
+                if (empty($items->AantalAanwezig)) 
+                {
                     $AantalAanwezig = "geen";
-                } else {
+                } 
+                else 
+                {
                     $AantalAanwezig = $items->AantalAanwezig;
                 }
 
@@ -70,7 +74,7 @@ class Leverancier extends Controller
                                 <td>$items->VerpakkingsEenheid</td>
                                 <td>$items->DatumLevering</td>
                                 <td>
-                                    <a href='" . URLROOT . "/Leverancier/updateproduct/$items->Id'><img src='" . URLROOT . "/img/bx-plus-medical.svg' alt='Info'></a>
+                                    <a href='" . URLROOT . "/Leverancier/createproduct/$items->Id'><img src='" . URLROOT . "/img/bx-plus-medical.svg' alt='Info'></a>
                                 </td>
                             </tr>";
             }
@@ -87,37 +91,29 @@ class Leverancier extends Controller
         $this->view('Leverancier/toonproduct', $data);
     }
 
-  public function updateproduct($id)
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $aantalEenheden = $_POST['aantal_eenheden'];
-        $this->LeverancierModel->updateAantalAanwezig($id, $aantalEenheden);
-        $this->LeverancierModel->updateDatumLaatsteLevering($id);
+    public function CreateProduct(int $Id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') 
+        {
+            // Display the update form
+            $leverancier = $this->LeverancierModel->leveringProduct($Id);
 
-        // Fetch the updated leverancier details
-        $leverancier = $this->LeverancierModel->leveringProduct($id);
+            $data = [    'title' => "<h2>Levering product</h2>"
+            ,'Naam' => $leverancier->Naam
+            ,'ContactPersoon' => $leverancier->Contactpersoon
+            ,'Mobiel' => $leverancier->Mobiel
+            ,'id' => $Id
+            ];
 
-        $data = [
-            'title' => "<h2>Levering product</h2>",
-            'Naam' => $leverancier->Naam,
-            'ContactPersoon' => $leverancier->Contactpersoon,
-            'Mobiel' => $leverancier->Mobiel,
-            'id' => $id,
-        ];
-        $this->view('Leverancier/updateproduct', $data);
-    } else {
-        // Display the update form
-        $leverancier = $this->LeverancierModel->leveringProduct($id);
-        $data = [
-            'title' => "<h2>Levering product</h2>",
-            'Naam' => $leverancier->Naam,
-            'ContactPersoon' => $leverancier->Contactpersoon,
-            'Mobiel' => $leverancier->Mobiel,
-            'id' => $id,
-        ];
-        $this->view('Leverancier/updateproduct', $data);
+            $this->view('Leverancier/createproduct', $data);
+        } 
+        else  // POST
+        {     
+            $_POST = filter_input_array(INPUT_POST);
+            $this->LeverancierModel->CreatProductPerLeverancier($_POST, $Id);
+            $this->toonproduct($Id);
+        }
     }
-}
 
 
 

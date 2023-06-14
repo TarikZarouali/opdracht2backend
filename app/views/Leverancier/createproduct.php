@@ -14,19 +14,19 @@
     <h2>Contactpersoon: <?=$data['ContactPersoon'];?></h2>
     <h2>Mobiel: <?=$data['Mobiel'];?></h2>
 
-    <form action="<?= URLROOT ?>/Leverancier/updateproduct/<?= $data['id'] ?>" method="post"> 
+    <form action="<?= URLROOT ?>/Leverancier/CreateProduct/<?= $data['id'] ?>" method="post">
         <table>
             <tbody>
                 <tr>
                     <td>
                         <h2>Aantal producteenheden</h2>
-                        <input type="text" name="aantal_eenheden">
+                        <input type="text" name="AantalProducten">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <h2>Datum eerstvolgende levering</h2>
-                        <input type="date" name="datum">
+                        <input type="date" name="DatumEerstvolgendeLevering">
                     </td>
                 </tr>
             </tbody>
